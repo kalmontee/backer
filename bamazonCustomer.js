@@ -9,13 +9,7 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
-connection.connect(err => {
-    console.log("connected as id " + connection.threadId + "\n");
-    if (err) throw err;
-
-    runSearch();
-});
-
+// runSearch function will read all data from the database
 function runSearch() {
     var query = "SELECT * FROM products";
 
@@ -23,84 +17,66 @@ function runSearch() {
         if (err) throw err;
 
         res.forEach(element => {
-            console.log(element);
+            console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price}`);
         });
-    });
-
-    inquirer.prompt({
-        name: "item",
-        type: "list",
-        message: "What would you like to do...",
-        choices: [
-            "What ID product would you like to buy?",
-            "How many units of the product would you like to buy?",
-            "EXIT"
-        ]
-    }).then(answer => {
-        // console.log("===========================\n");
-        switch (answer.item) {
-            case "What ID product would you like to buy?":
-                productId();
-                break;
-
-            case "How many units of the product would you like to buy?":
-                productUnits();
-                break;
-
-            case "EXIT":
-                connection.end();
-        }
+        buyProduct();
     });
 }
 
-function productId() {
+function buyProduct() {
 
-    connection.end();
+    console.log("-----------------------");
 
-    // inquirer.prompt
-    // inquirer.prompt({
-    //     name: "item",
-    //     type: "list",
-    //     message: "What would you like to do...",
-    //     choices: [
-    //         "What ID product would you like to buy?",
-    //         "How many units of the product would you like to buy?"
-    //     ]
-    // }).then(answer => {
-    //     switch (answer.item) {
-    //         case "What ID product would you like to buy?":
-    //             productId()
-    //     }
+    inquirer.prompt([{
+            name: "itemID",
+            type: "input",
+            message: "What ID product would you like to buy?",
 
-    // });
-    // var query = "SELECT item_id FROM products";
-    // connection.query(query, (err, res) => {
-    //     if (err) throw err;
-    //     console.log(res);
-    //     connection.end();
-    // })
-    // create the prompt for product id
-    // .then() function
-    // Inside of .then() we're going to pass the prompt
+        }, {
+            name: "numberOfUnits",
+            type: "input",
+            message: "How many units of the product would you like to buy?",
 
+        }])
+        .then(answer => {
+            var query = "SELECT item_id, price, stock_quantity FROM products WHERE ?";
 
-    // var query = "Select * FROM products";
-    // connection.query()
+            connection.query(query, { item_id: answer.itemID },
+                (err, results) => {
+                    // console.log(results);
+
+                    // If user decides to enter an invalid product ID item
+                    if (results.length === 0) {
+                        console.log("\n----------------------- \nProduct ID not found...\n");
+                        buyProduct();
+
+                    } else if (answer.numberOfUnits <= results[0].stock_quantity) {
+                        var total = answer.numberOfUnits * results[0].price;
+
+                        var query = connection.query(
+                            "UPDATE products SET ? WHERE ?", [{
+                                    stock_quantity: results[0].stock_quantity - answer.numberOfUnits
+                                },
+                                {
+                                    item_id: answer.itemID
+                                }
+                            ], (err, res) => {
+                                console.log(`\n----------------------- \nSuccess!! \nThe total cost of your purchase is: ${total}`);
+                            });
+
+                        // If user enters an invalid stock number then log insufficient stock
+                    } else if (answer.numberOfUnits > results[0].stock_quantity) {
+                        console.log(`\n----------------------- \nInsufficient stock!! \nThere's only ${results[0].stock_quantity} units available. \nPlease try again..\n`);
+                        buyProduct();
+                    }
+                    connection.end();
+                });
+        });
 }
 
-// .then(err => {
-//     if (err) throw err;
+connection.connect(err => {
+    console.log("connected as id " + connection.threadId + "\n");
+    if (err) throw err;
 
-//     inquirer.prompt({
-//         name: "item",
-//         type: "list",
-//         message: "What would you like to do...",
-//         choices: [
-//             "What ID product would you like to buy?",
-//             "How many units of the product would you like to buy?"
-//         ]
-//     });
-//     connection.end();
-// })
-
-// function productUnits() {}
+    runSearch();
+});
