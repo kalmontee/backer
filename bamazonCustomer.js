@@ -16,6 +16,7 @@ function runSearch() {
     connection.query(query, (err, res) => {
         if (err) throw err;
 
+        // This will display all the products for the customer to choose from
         res.forEach(element => {
             console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price}`);
         });
@@ -48,19 +49,26 @@ function buyProduct() {
                     // If user decides to enter an invalid product ID item
                     if (results.length === 0) {
                         console.log("\n----------------------- \nProduct ID not found...\n");
+
+                        // Here we run the buyProduct function to ask user's what product ID they would like to buy
                         buyProduct();
 
+                        // The amount of stock quantity customer is going to order
                     } else if (answer.numberOfUnits <= results[0].stock_quantity) {
+
+                        // This will determine the total cost of the costumer purchase
                         var total = answer.numberOfUnits * results[0].price;
 
                         var query = connection.query(
                             "UPDATE products SET ? WHERE ?", [{
+                                    // This will substract the amount of stock quantity stored in the database when the costumer purchase their order.
                                     stock_quantity: results[0].stock_quantity - answer.numberOfUnits
                                 },
                                 {
                                     item_id: answer.itemID
                                 }
                             ], (err, res) => {
+                                if (err) throw err;
                                 console.log(`\n----------------------- \nSuccess!! \nThe total cost of your purchase is: ${total}`);
                             });
 
