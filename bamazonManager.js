@@ -64,6 +64,23 @@ function productsForSale() {
     });
 }
 
+// lowInventory function will list all items with an inventory count lower than five
+function lowInventory() {
+    var query = "SELECT * FROM products WHERE stock_quantity < 5";
+
+    connection.query(query, (err, results) => {
+        console.log("--------------------------------\n");
+        if (err) throw err;
+
+        // forEach will display all the product items with less than 5 stored in the inventory.
+        results.forEach(element => {
+            console.log(`Product Name: ${element.product_name} \nStock Quantity: ${element.stock_quantity}\n`);
+        });
+        console.log("--------------------------------\n");
+        start();
+    });
+}
+
 connection.connect(err => {
     console.log("connected as id " + connection.threadId + "\n");
     if (err) throw err;
