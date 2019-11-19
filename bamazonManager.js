@@ -48,6 +48,22 @@ function start() {
     });
 }
 
+// productsForSale function will display all items in the data base that are for sale
+function productsForSale() {
+    var query = "SELECT * FROM products";
+
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+
+        // This will display all the products for the customer to choose from
+        res.forEach(element => {
+            console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price} \nStock Quantity: ${element.stock_quantity}`);
+        });
+        console.log("--------------------------------\n");
+        start();
+    });
+}
+
 connection.connect(err => {
     console.log("connected as id " + connection.threadId + "\n");
     if (err) throw err;
