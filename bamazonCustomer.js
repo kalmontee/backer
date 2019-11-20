@@ -18,10 +18,12 @@ function runSearch() {
 
         // This will display all the products for the customer to choose from
         res.forEach(element => {
-            console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price}`);
+            // console.log(element)
+            console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price} \nStock Quantity: ${element.stock_quantity}`);
         });
         buyProduct();
     });
+    1
 }
 
 function buyProduct() {
@@ -46,15 +48,7 @@ function buyProduct() {
                 (err, results) => {
                     // console.log(results);
 
-                    // If user decides to enter an invalid product ID item
-                    if (results.length === 0) {
-                        console.log("\n----------------------- \nProduct ID not found...\n");
-
-                        // Here we run the buyProduct function to ask user's what product ID they would like to buy
-                        buyProduct();
-
-                        // The amount of stock quantity customer is going to order
-                    } else if (answer.numberOfUnits <= results[0].stock_quantity) {
+                    if (answer.numberOfUnits <= results[0].stock_quantity) {
 
                         // This will determine the total cost of the costumer purchase
                         var total = answer.numberOfUnits * results[0].price;
@@ -73,7 +67,7 @@ function buyProduct() {
                             });
 
                         // If user enters an invalid stock number then log insufficient stock
-                    } else if (answer.numberOfUnits > results[0].stock_quantity) {
+                    } else {
                         console.log(`\n----------------------- \nInsufficient stock!! \nThere's only ${results[0].stock_quantity} units available. \nPlease try again..\n`);
                         buyProduct();
                     }
