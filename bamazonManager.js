@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+var Table = require('cli-table2');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -53,12 +54,23 @@ function productsForSale() {
     var query = "SELECT * FROM products";
 
     connection.query(query, (err, res) => {
+        console.log("--------------------------------\n");
         if (err) throw err;
 
         // This will display all the products for the customer to choose from
-        res.forEach(element => {
-            console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price} \nStock Quantity: ${element.stock_quantity}`);
+        // console.log(JSON.stringify(res, null, 2));
+        var table = new Table({
+            head: ["Item Id", "Product Name", "Price", "Quantity"],
+            colWidths: [15, 20, 18, 10],
+            colAligns: ["center", "left", "right", "right"]
         });
+
+        // Displaying all the products in the table
+        res.forEach(element => {
+            table.push([element.item_id, element.product_name, element.price, element.stock_quantity]);
+        });
+
+        console.log(table.toString());
         console.log("--------------------------------\n");
         start();
     });
@@ -72,12 +84,51 @@ function lowInventory() {
         console.log("--------------------------------\n");
         if (err) throw err;
 
-        // forEach will display all the product items with less than 5 stored in the inventory.
-        results.forEach(element => {
-            console.log(`Product Name: ${element.product_name} \nStock Quantity: ${element.stock_quantity}\n`);
+        var table = new Table({
+            head: ["Product Name", "Quantity"],
+            colWidths: [20, 10],
+            colAligns: ["left", "right"]
         });
+
+        // Displaying all the products in the table
+        results.forEach(element => {
+            table.push([element.product_name, element.stock_quantity]);
+        });
+        console.log(table.toString());
         console.log("--------------------------------\n");
         start();
+    });
+}
+
+function addInventory() {
+    var query = "SELECT * FROM products WHERE product_name";
+
+    connection.query(query, (err, results) => {
+        console.log("--------------------------------\n");
+        if (err) throw err;
+
+        inquirer.prompt([{
+            name: "product",
+            type: "rawlist",
+            choices() {
+                var choiceArr = [];
+                for (var i = 0; i < results.length; i++) {
+                    choiceArr.push(results[i].product_name);
+                }
+                return choiceArr;
+            },
+            // message: "Which department would you like to add more?",
+            message: "Add more",
+            type: "input"
+        }, ]).then(answer => {
+            var chosenProduct;
+            results.forEach(element => {
+                if (element.product_name === answer.product) {
+                    chosenProduct = element;
+                }
+            });
+        });
+        connection.end();
     });
 }
 
