@@ -17,6 +17,11 @@ npm install cli-table2
 
 You must copy the bamazon.sql file and paste it into your SQL database.
 
+## Technologies
+
+NodeJS
+MySQL
+
 ## bamazonCustomer.js
 
 Customer will have the option to choose what product they would like to purchased from the table.
