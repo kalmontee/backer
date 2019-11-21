@@ -100,35 +100,79 @@ function lowInventory() {
     });
 }
 
+// addInventory function will add new stocks to the inventory
 function addInventory() {
-    var query = "SELECT * FROM products WHERE product_name";
+    var query = "SELECT * FROM products";
 
     connection.query(query, (err, results) => {
         console.log("--------------------------------\n");
         if (err) throw err;
 
+        var table = new Table({
+            head: ["Item Id", "Product Name", "Department Name", "Quantity"],
+            colWidths: [15, 20, 20, 10],
+            colAligns: ["center", "left", "left", "right"]
+        });
+
+        // Displaying all the products in the table
+        results.forEach(element => {
+            table.push([element.item_id, element.product_name, element.department_name, element.stock_quantity]);
+        });
+        console.log(table.toString());
+
         inquirer.prompt([{
             name: "product",
-            type: "rawlist",
-            choices() {
-                var choiceArr = [];
-                for (var i = 0; i < results.length; i++) {
-                    choiceArr.push(results[i].product_name);
-                }
-                return choiceArr;
-            },
-            // message: "Which department would you like to add more?",
-            message: "Add more",
-            type: "input"
-        }, ]).then(answer => {
-            var chosenProduct;
-            results.forEach(element => {
-                if (element.product_name === answer.product) {
-                    chosenProduct = element;
-                }
-            });
+            type: "input",
+            message: "Which department would you like to add more?",
+        }, {
+            name: "units",
+            type: "input",
+            message: "How many units would you like to add?"
+
+        }]).then(answer => {
+            var query = "SELECT item_id, product_name, stock_quantity FROM products WHERE ?";
+
+            connection.query(query, {
+                    item_id: answer.product,
+                },
+                (err, results) => {
+                    if (err) throw err;
+
+                    // If the manager decides to enter an invalid product ID item by mistake
+                    if (results.length === 0) {
+                        console.log("\n-------------------------------- \nProduct NOT found... Please try again.\n");
+
+                        // Here we run the addInventory function again to ask the manager what product they would like to add.
+                        addInventory();
+
+                        // The amount of stock quantity the manager is going to placed
+                    } else if (parseInt(answer.units)) {
+
+                        // This will determine the total cost of the costumer purchase
+                        var total = parseInt(answer.units) + results[0].stock_quantity;
+
+                        var query = connection.query(
+                            "UPDATE products SET ? WHERE ?", [{
+                                    // This will add the amount of stock quantity stored in the database when the manager adds to their inventory
+                                    stock_quantity: results[0].stock_quantity + parseInt(answer.units)
+                                },
+                                {
+                                    item_id: answer.product,
+                                }
+                            ], (err) => {
+                                if (err) throw err;
+                                console.log(`\n----------------------- \nSuccess!! You added ${answer.units} new items to your inventory. \nYour new product total is ${total} on ${results[0].product_name}`);
+                                connection.end();
+                            });
+
+                        // Alert the manager that the item was not successful
+                    } else {
+                        console.log(`\n----------------------- \nNOT successful! \nPlease try again..\n`);
+                        // Run the addInventory function to ask what product they would like to add again.
+                        addInventory();
+                    }
+                });
         });
-        connection.end();
     });
 }
 
