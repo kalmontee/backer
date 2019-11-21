@@ -61,7 +61,7 @@ function productsForSale() {
         // console.log(JSON.stringify(res, null, 2));
         var table = new Table({
             head: ["Item Id", "Product Name", "Price", "Quantity"],
-            colWidths: [15, 20, 18, 10],
+            colWidths: [15, 25, 18, 10],
             colAligns: ["center", "left", "right", "right"]
         });
 
@@ -86,7 +86,7 @@ function lowInventory() {
 
         var table = new Table({
             head: ["Product Name", "Quantity"],
-            colWidths: [20, 10],
+            colWidths: [25, 10],
             colAligns: ["left", "right"]
         });
 
@@ -110,7 +110,7 @@ function addInventory() {
 
         var table = new Table({
             head: ["Item Id", "Product Name", "Department Name", "Quantity"],
-            colWidths: [15, 20, 20, 10],
+            colWidths: [15, 25, 20, 10],
             colAligns: ["center", "left", "left", "right"]
         });
 
@@ -172,6 +172,56 @@ function addInventory() {
                         addInventory();
                     }
                 });
+        });
+    });
+}
+
+// addProduct function will add new products to the database.
+function addProduct() {
+    inquirer.prompt([{
+            name: "product",
+            type: "input",
+            message: "Name of the product:"
+        },
+        {
+            name: "department",
+            type: "input",
+            message: "Name of the department:",
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "What price would you like to add?",
+            validate(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            name: "stock",
+            type: "input",
+            message: "How many units would you like to add?",
+            validate(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false
+            }
+        }
+    ]).then(answer => {
+        var query = "INSERT INTO products SET ?";
+
+        connection.query(query, {
+            product_name: answer.product,
+            department_name: answer.department,
+            price: answer.price,
+            stock_quantity: answer.stock
+        }, (err) => {
+            if (err) throw err;
+            console.log("\n----------------------- \nYour new product was created successfully!\n");
+            start();
         });
     });
 }
