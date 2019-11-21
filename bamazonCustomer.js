@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+var Table = require('cli-table2');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -16,14 +17,19 @@ function runSearch() {
     connection.query(query, (err, res) => {
         if (err) throw err;
 
-        // This will display all the products for the customer to choose from
-        res.forEach(element => {
-            // console.log(element)
-            console.log(`\nProduct ID: ${element.item_id} \nProduct Name: ${element.product_name} \nPrice: ${element.price} \nStock Quantity: ${element.stock_quantity}`);
+        var table = new Table({
+            head: ["Item Id", "Product Name", "Price"],
+            colWidths: [15, 20, 18],
+            colAligns: ["center", "left", "right"]
         });
+
+        // This will display all the products for the customer to choose from in a table form.
+        res.forEach(element => {
+            table.push([element.item_id, element.product_name, element.price]);
+        });
+        console.log(table.toString());
         buyProduct();
     });
-    1
 }
 
 function buyProduct() {
@@ -46,9 +52,16 @@ function buyProduct() {
 
             connection.query(query, { item_id: answer.itemID },
                 (err, results) => {
-                    // console.log(results);
 
-                    if (answer.numberOfUnits <= results[0].stock_quantity) {
+                    // If user decides to enter an invalid product ID item
+                    if (results.length === 0) {
+                        console.log("\n----------------------- \nProduct ID NOT found...\n");
+
+                        // Here we run the buyProduct function to ask user's what product ID they would like to buy again
+                        buyProduct();
+
+                        // The amount of stock quantity customer is going to order
+                    } else if (answer.numberOfUnits <= results[0].stock_quantity) {
 
                         // This will determine the total cost of the costumer purchase
                         var total = answer.numberOfUnits * results[0].price;
@@ -64,14 +77,14 @@ function buyProduct() {
                             ], (err, res) => {
                                 if (err) throw err;
                                 console.log(`\n----------------------- \nSuccess!! \nThe total cost of your purchase is: ${total}`);
+                                connection.end();
                             });
 
-                        // If user enters an invalid stock number then log insufficient stock
+                        // If customer enters an invalid stock number then log insufficient stock
                     } else {
                         console.log(`\n----------------------- \nInsufficient stock!! \nThere's only ${results[0].stock_quantity} units available. \nPlease try again..\n`);
                         buyProduct();
                     }
-                    connection.end();
                 });
         });
 }
