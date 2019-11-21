@@ -19,7 +19,7 @@ function runSearch() {
 
         var table = new Table({
             head: ["Item Id", "Product Name", "Price"],
-            colWidths: [15, 20, 18],
+            colWidths: [15, 25, 18],
             colAligns: ["center", "left", "right"]
         });
 
