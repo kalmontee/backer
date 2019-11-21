@@ -20,6 +20,7 @@ You must copy the bamazon.sql file and paste it into your SQL database.
 ## Technologies
 
 NodeJS
+
 MySQL
 
 ## bamazonCustomer.js
