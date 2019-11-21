@@ -27,6 +27,7 @@ If the customer decides to enter a higher quantity then it will return insuffici
 option to buy again.
 
 You should see something like this:
+https://media.giphy.com/media/eMPKvuTtLanEcjG87E/giphy.mp4
 
 
 ## bamazonManager.js
