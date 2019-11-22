@@ -3,11 +3,24 @@ Bamazon is a mini Amazon-like storefront using MySQL database.
 
 Customers can buy products.
 
-Manager can check the quantity of stock, add to the inventory, and create new products.
+Manager can check products for sale, quantity of stock, add to the inventory, and create new products.
+
+## Technologies
+
+* NodeJS
+
+* MySQL
 
 ## Installation
 
 For the App to run, you must install the following commands:
+
+First begin with a npm install to install everything I have stored. This should automatically install the following commands.
+
+```bash
+npm install
+```
+Check to see if the App is working. If not then do the following commands: 
 
 ```bash
 npm install mysql
@@ -15,13 +28,9 @@ npm install inquirer
 npm install cli-table2
 ```
 
-You must copy the bamazon.sql file and paste it into your SQL database.
+You must copy the bamazon.sql file and paste it into your SQL database. Only do this if you would like to see any changes you have made.
 
-## Technologies
-
-* NodeJS
-
-* MySQL
+For example: If you are going to buy a product, you should want to check if your database is being updated.
 
 ## bamazonCustomer.js
 
