@@ -22,6 +22,7 @@ function start() {
             "View Low Inventory",
             "Add to Inventory",
             "Add New Product",
+            "Delete Product",
             "EXIT"
         ]
     }).then(function(answer) {
@@ -40,6 +41,10 @@ function start() {
 
             case "Add New Product":
                 addProduct();
+                break;
+
+            case "Delete Product":
+                deleteProduct();
                 break;
 
             case "EXIT":
@@ -66,9 +71,7 @@ function productsForSale() {
         });
 
         // Displaying all the products in the table
-        res.forEach(element => {
-            table.push([element.item_id, element.product_name, element.price, element.stock_quantity]);
-        });
+        res.forEach(element => table.push([element.item_id, element.product_name, element.price, element.stock_quantity]));
 
         console.log(table.toString());
         console.log("--------------------------------\n");
@@ -91,9 +94,8 @@ function lowInventory() {
         });
 
         // Displaying all the products in the table
-        results.forEach(element => {
-            table.push([element.product_name, element.stock_quantity]);
-        });
+        results.forEach(element => table.push([element.product_name, element.stock_quantity]));
+
         console.log(table.toString());
         console.log("--------------------------------\n");
         start();
@@ -115,9 +117,8 @@ function addInventory() {
         });
 
         // Displaying all the products in the table
-        results.forEach(element => {
-            table.push([element.item_id, element.product_name, element.department_name, element.stock_quantity]);
-        });
+        results.forEach(element => table.push([element.item_id, element.product_name, element.department_name, element.stock_quantity]));
+
         console.log(table.toString());
 
         inquirer.prompt([{
@@ -138,7 +139,7 @@ function addInventory() {
                 (err, results) => {
                     if (err) throw err;
 
-                    // If the manager decides to enter an invalid product ID item by mistake
+                    // If the manager enters an invalid product ID item by mistake
                     if (results.length === 0) {
                         console.log("\n-------------------------------- \nProduct NOT found... Please try again.\n");
 
@@ -148,7 +149,7 @@ function addInventory() {
                         // The amount of stock quantity the manager is going to placed
                     } else if (parseInt(answer.units)) {
 
-                        // This will determine the total cost of the costumer purchase
+                        // Will determine the total of units the manager added to the inventory.
                         var total = parseInt(answer.units) + results[0].stock_quantity;
 
                         var query = connection.query(
@@ -222,6 +223,42 @@ function addProduct() {
             if (err) throw err;
             console.log("\n----------------------- \nYour new product was created successfully!\n");
             start();
+        });
+    });
+}
+
+// Delete function will remove a product from the database
+function deleteProduct() {
+    var query = "SELECT * FROM products";
+
+    connection.query(query, (err, results) => {
+        console.log("--------------------------------\n");
+        if (err) throw err;
+
+        var table = new Table({
+            head: ["Item Id", "Product Name", "Department Name", "Quantity"],
+            colWidths: [15, 25, 20, 10],
+            colAligns: ["center", "left", "left", "right"]
+        });
+
+        // Displaying all the products in the table
+        results.forEach(element => table.push([element.item_id, element.product_name, element.department_name, element.stock_quantity]));
+
+        console.log(table.toString());
+
+        inquirer.prompt([{
+            name: "product",
+            type: "input",
+            message: "Which department would you like to delete?",
+
+        }]).then(answer => {
+            var query = "DELETE FROM products WHERE ?"
+
+            connection.query(query, { item_id: answer.product }, (err) => {
+                if (err) throw err;
+
+                console.log(`ID ${answer.product} has been deleted.`);
+            });
         });
     });
 }
