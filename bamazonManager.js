@@ -254,10 +254,11 @@ function deleteProduct() {
         }]).then(answer => {
             var query = "DELETE FROM products WHERE ?"
 
-            connection.query(query, { item_id: answer.product }, (err) => {
+            connection.query(query, { item_id: answer.product }, (err, results) => {
                 if (err) throw err;
 
-                console.log(`ID ${answer.product} has been deleted.`);
+                console.log(`\n-------------------------------- \nID ${answer.product} has been deleted.\n`);
+                start();
             });
         });
     });
