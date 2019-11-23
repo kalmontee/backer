@@ -3,7 +3,7 @@ Bamazon is a mini Amazon-like storefront using MySQL database.
 
 Customers can buy products.
 
-Manager can check products for sale, quantity of stock, add to the inventory, and create new products.
+Manager has the option to check products for sale, quantity of stock, add to the inventory, create new products and delete products.
 
 ## Technologies
 
@@ -49,7 +49,7 @@ You should see something like this:
 ## bamazonManager.js
 
 The manager will have five options to choose from. They can view Products for Sale, View Low Inventory,
-Add to Inventory, Add New Product, or Exit.
+Add to Inventory, Add New Product, or Delete Products.
 
 ### Products for Sale:
 
