@@ -24,9 +24,8 @@ function runSearch() {
         });
 
         // This will display all the products for the customer to choose from in a table form.
-        res.forEach(element => {
-            table.push([element.item_id, element.product_name, element.price]);
-        });
+        res.forEach(element => table.push([element.item_id, element.product_name, element.price]));
+
         console.log(table.toString());
         buyProduct();
     });
