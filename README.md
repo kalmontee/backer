@@ -79,3 +79,10 @@ Create and add a new product to the database
 
 
 ## Video Demo
+
+##### BamazonCustomer:
+https://drive.google.com/open?id=1qXrgJpnv2vmEXSqj0FE5ovPjR8ynggD0
+
+##### BamazonManager:
+https://drive.google.com/open?id=1_f3G6APPxsjwJHwpR2kJAXWwngk3gtXQ
+
