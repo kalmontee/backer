@@ -43,7 +43,7 @@ option to buy again.
 
 You should see something like this:
 
-![Animated GIF-downsized_large](https://user-images.githubusercontent.com/52462582/69366618-b7e93b80-0c64-11ea-85da-d1a756a71c06.gif)
+![BamazonCustomer](https://user-images.githubusercontent.com/52462582/69502559-bc208d80-0ede-11ea-9dbc-8508271deaf6.png)
 
 
 ## bamazonManager.js
@@ -51,32 +51,38 @@ You should see something like this:
 The manager will have five options to choose from. They can view Products for Sale, View Low Inventory,
 Add to Inventory, Add New Product, or Delete Products.
 
-### Products for Sale:
+### Products for Sale
 
 You should see something like this:
 
-![Animated GIF-downsized_large](https://user-images.githubusercontent.com/52462582/69367164-bd935100-0c65-11ea-89e4-fa58a34cdc07.gif)
+![ViewProducts](https://user-images.githubusercontent.com/52462582/69502749-ca6fa900-0ee0-11ea-8504-25a78deb767c.png)
+
 
 ### View Low Inventory
 
-Will display products that have less than 5 stocks
+Will display products that have less than 5 stocks:
 
-![Animated GIF-downsized_large](https://user-images.githubusercontent.com/52462582/69367389-32ff2180-0c66-11ea-8b60-665472be1cf0.gif)
+![Manager-lowProducts](https://user-images.githubusercontent.com/52462582/69502725-8086c300-0ee0-11ea-979b-58a1b6ff0ab8.png)
 
 
 ### Add to Inventory
 
-Add more stocks to any product item
+Add more stocks to any product item:
 
-![Animated GIF-downsized_large](https://user-images.githubusercontent.com/52462582/69367725-cafd0b00-0c66-11ea-899f-75930651b1aa.gif)
+![AddInventory](https://user-images.githubusercontent.com/52462582/69502808-63062900-0ee1-11ea-85fc-c0955dec000d.png)
 
 
 ### Create New Product
 
-Create and add a new product to the database
+Create and add a new product to the database:
 
-![Animated GIF-downsized_large (1)](https://user-images.githubusercontent.com/52462582/69368216-ae150780-0c67-11ea-8333-21bf9030963f.gif)
+![AddNewProduct](https://user-images.githubusercontent.com/52462582/69502759-ea9f6800-0ee0-11ea-9d2b-e08f841ea10f.png)
 
+### Delete Product
+
+Delete Product from the database by selecting the corresponding ID:
+
+![DeleteProduct](https://user-images.githubusercontent.com/52462582/69502823-93e65e00-0ee1-11ea-96ab-2394bd2a1212.png)
 
 ## Video Demo
 
